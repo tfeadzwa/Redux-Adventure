@@ -6,10 +6,15 @@ const POSTS_URL = "https://jsonplaceholder.typicode.com/posts";
 
 const initialState = {
   posts: [],
-  state: "idle", // "idle" | "loading" | "succeeded" | "failed"
+  status: "idle", // "idle", "loading", "succeeded", "failed",
   error: null,
 };
 
+// 1. thunk action creator
+// when thun action creator is dispatched it executes the payload creator callback function
+// payload creator callback function returns a promise that represents an asynchronous operation - calling an API and waiting for a response
+
+// 2. dispatches lifecycle actions for each status of the promise
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const response = await axios.get(POSTS_URL);
   return response.data;
@@ -21,7 +26,7 @@ const postsSlice = createSlice({
   reducers: {
     postAdded: {
       reducer(state, action) {
-        state.post.push(action.payload);
+        state.posts.push(action.payload);
       },
       prepare(title, content, userId) {
         return {
@@ -45,14 +50,46 @@ const postsSlice = createSlice({
 
     reactionAdded(state, action) {
       const { postId, reaction } = action.payload;
-      const existingPost = state.post.find((post) => post.id === postId);
+      const existingPost = state.posts.find((post) => post.id === postId);
       if (existingPost) {
         existingPost.reactions[reaction]++;
       }
     },
+
+    // listening for the promise lifecycle action types dispatched by asyncThunk (thunk action creator)
+    extraReducers(builder) {
+      builder
+        .addCase(fetchPosts.pending, (state) => {
+          state.status = "loading";
+        })
+        .addCase(fetchPosts.fulfilled, (state, action) => {
+          state.status = "succeeded";
+          let min = 1;
+          const loadedPosts = action.payload.map((post) => {
+            post.date = sub(new Date(), { minutes: min++ }).toISOString();
+            post.reactions = {
+              thumbsUp: 0,
+              wow: 0,
+              heart: 0,
+              rocket: 0,
+              coffee: 0,
+            };
+
+            return post;
+          });
+
+          state.posts = state.posts.concat(loadedPosts);
+        })
+        .addCase(fetchPosts.rejected, (state, action) => {
+          state.status = "failed";
+          state.error = action.error?.message;
+        });
+    },
   },
 });
 
-export const selectAllPosts = (state) => state.post.posts;
+export const selectAllPosts = (state) => state.posts.posts;
+export const getPostsStatus = (state) => state.posts.status;
+export const getPostsError = (state) => state.posts.error;
 export const { postAdded, reactionAdded } = postsSlice.actions;
 export default postsSlice.reducer;
