@@ -15,7 +15,7 @@ const PostExcerpt = ({ post }) => {
         <PostAuthor userId={post.userId} />
         <TimeAgo timestamp={post.date} />
       </p>
-      <ReactionButtons post={post} />a
+      <ReactionButtons post={post} />
     </article>
   );
 };
