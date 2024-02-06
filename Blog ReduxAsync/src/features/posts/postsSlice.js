@@ -3,10 +3,9 @@ import { sub } from "date-fns";
 import axios from "axios";
 
 const POSTS_URL = "https://jsonplaceholder.typicode.com/posts";
-const FETCH_POSTS = "posts/fetchPosts";
 
 // returns thunk action creator
-export const fetchPosts = createAsyncThunk(FETCH_POSTS, async () => {
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const response = await axios.get(POSTS_URL);
   return response.data;
 });
@@ -69,8 +68,10 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
+
         let min = 1;
         const dataPayload = action.payload.map((post) => {
+          post.id = nanoid(); // generate a new id
           post.date = sub(new Date(), { minutes: min++ }).toISOString();
           post.reactions = {
             thumbsUp: 0,
@@ -83,31 +84,36 @@ const postsSlice = createSlice({
           return post;
         });
 
-        return dataPayload;
+        state.posts = state.posts.concat(dataPayload); // concat already existing posts with dataPayload posts
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error?.message;
       })
       .addCase(addNewPost.fulfilled, (state, action) => {
-        action.payload.userId = Number(action.payload.userId);
-        action.payload.date = new Date().toISOString();
-        action.payload.reactions = {
-          thumbsUp: 0,
-          wow: 0,
-          heart: 0,
-          rocket: 0,
-          coffee: 0,
+        // create a new object with the desired properties
+        const newPost = {
+          id: action.payload.id,
+          title: action.payload.title,
+          body: action.payload.body,
+          userId: Number(action.payload.userId),
+          date: new Date().toISOString(),
+          reactions: {
+            thumbsUp: 0,
+            wow: 0,
+            heart: 0,
+            rocket: 0,
+            coffee: 0,
+          },
         };
 
-        console.log(action.payload);
-        state.posts.push(action.payload);
+        state.posts.push(newPost);
       });
   },
 });
 
 export const selectAllPosts = (state) => state.posts.posts;
-export const getPostsStatus = (state) => state.status;
+export const getPostsStatus = (state) => state.posts.status;
 export const getPostsError = (state) => state.error;
 export const { postAdded, reactionAdded } = postsSlice.actions;
 export default postsSlice.reducer;

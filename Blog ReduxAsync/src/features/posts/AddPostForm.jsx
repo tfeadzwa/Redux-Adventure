@@ -12,7 +12,6 @@ const AddPostForm = () => {
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   const users = useSelector(selectAllUsers);
-
   const onTitleChange = (e) => setTitle(e.target.value);
   const onContentChanged = (e) => setContent(e.target.value);
   const onAuthorChanged = (e) => setUserId(e.target.value);
@@ -81,7 +80,7 @@ const AddPostForm = () => {
           className="add-posts__save-post-btn"
           type="button"
           disabled={!canSave}
-          onClick={() => onSavePostClicked}
+          onClick={onSavePostClicked} // remove the arrow function
         >
           Save Post
         </button>

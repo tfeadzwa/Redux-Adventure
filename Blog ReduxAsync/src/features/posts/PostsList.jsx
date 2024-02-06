@@ -22,7 +22,6 @@ const PostsList = () => {
     }
   }, [postsStatus, dispatch]);
 
-  console.log(posts);
   let content;
   if (postsStatus === "loading") {
     content = <p>Loading....</p>;

@@ -6,7 +6,7 @@ import { store } from "./app/store";
 import "./assets/boilerplates.scss";
 import { fetchUsers } from "./features/users/usersSlice";
 
-store.dispatch(fetchUsers);
+store.dispatch(fetchUsers());
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
