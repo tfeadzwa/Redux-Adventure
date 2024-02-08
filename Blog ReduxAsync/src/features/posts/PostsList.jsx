@@ -31,7 +31,7 @@ const PostsList = () => {
       .slice()
       .sort((a, b) => b.date.localeCompare(a.date));
     content = orderedPosts.map((post) => (
-      <PostExcerpt key={post.id} post={post} />
+      <PostExcerpt key={post.date} post={post} />
     ));
   } else if (postsStatus === "failed") {
     content = <p>{postsError}</p>;
@@ -44,12 +44,7 @@ const PostsList = () => {
     );
   }
 
-  return (
-    <section className="postslist">
-      <h1>Posts</h1>
-      {content}
-    </section>
-  );
+  return <section className="postslist">{content}</section>;
 };
 
 export default PostsList;

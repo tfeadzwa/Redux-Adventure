@@ -18,6 +18,15 @@ export const addNewPost = createAsyncThunk(
   }
 );
 
+export const updatePost = createAsyncThunk(
+  "posts/udatePosts",
+  async (initialPost) => {
+    const { id } = initialPost;
+    const response = await axios.put(`${POSTS_URL}/${id}`, initialPost);
+    return response.data;
+  }
+);
+
 const initialState = {
   posts: [],
   status: "idle",
@@ -71,7 +80,6 @@ const postsSlice = createSlice({
 
         let min = 1;
         const dataPayload = action.payload.map((post) => {
-          post.id = nanoid(); // generate a new id
           post.date = sub(new Date(), { minutes: min++ }).toISOString();
           post.reactions = {
             thumbsUp: 0,
@@ -93,7 +101,7 @@ const postsSlice = createSlice({
       .addCase(addNewPost.fulfilled, (state, action) => {
         // create a new object with the desired properties
         const newPost = {
-          id: action.payload.id,
+          id: nanoid(),
           title: action.payload.title,
           body: action.payload.body,
           userId: Number(action.payload.userId),
@@ -108,6 +116,18 @@ const postsSlice = createSlice({
         };
 
         state.posts.push(newPost);
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        if (!action.payload?.id) {
+          console.log("Update could not complete");
+          console.log(action.payload);
+          return;
+        }
+
+        const { id } = action.payload;
+        action.payload.date = new Date().toISOString();
+        const posts = state.posts.filter((post) => post.id !== id);
+        state.posts = [...posts, action.payload];
       });
   },
 });
@@ -115,5 +135,9 @@ const postsSlice = createSlice({
 export const selectAllPosts = (state) => state.posts.posts;
 export const getPostsStatus = (state) => state.posts.status;
 export const getPostsError = (state) => state.error;
+
+export const selectPostById = (state, postId) =>
+  state.posts.posts.find((post) => post.id === postId);
+
 export const { postAdded, reactionAdded } = postsSlice.actions;
 export default postsSlice.reducer;

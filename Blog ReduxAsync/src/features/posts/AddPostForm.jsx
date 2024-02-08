@@ -24,12 +24,11 @@ const AddPostForm = () => {
       try {
         setAddRequestStatus("pending");
         dispatch(addNewPost({ title, body: content, userId })).unwrap();
-
         setTitle("");
         setContent("");
         setUserId("");
-      } catch (error) {
-        console.error("Failed to save post");
+      } catch (err) {
+        console.error("Failed to save post", err);
       } finally {
         setAddRequestStatus("idle");
       }
