@@ -13,9 +13,22 @@ const ReactionButtons = ({ post }) => {
 
   const dispatch = useDispatch();
 
+  const divStyles = {
+    display: "flex",
+    gap: `${0.5}rem`,
+    marginTop: `${1}rem`,
+  };
+
+  const btnStyles = {
+    cursor: "pointer",
+    backgroundColor: "inherit",
+    border: "none",
+  };
+
   const reactionsButton = Object.entries(reactionEmoji).map(([name, emoji]) => {
     return (
       <button
+        style={btnStyles}
         key={name}
         type="button"
         onClick={() =>
@@ -27,7 +40,7 @@ const ReactionButtons = ({ post }) => {
     );
   });
 
-  return <div>{reactionsButton}</div>;
+  return <div style={divStyles}>{reactionsButton}</div>;
 };
 
 export default ReactionButtons;

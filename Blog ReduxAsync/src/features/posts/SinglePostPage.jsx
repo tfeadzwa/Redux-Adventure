@@ -9,6 +9,36 @@ const SinglePostPage = () => {
   const { postId } = useParams();
   const post = useSelector((state) => selectPostById(state, Number(postId)));
 
+  const divStyles = {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: `${10}rem`,
+  };
+
+  const articleStyles = {
+    border: `${0.0625}rem solid black`,
+    borderRadius: `${0.5}rem`,
+    marginTop: `${1}rem`,
+    padding: `${2}rem`,
+    width: `${60}%`,
+    fontSize: `${1.125}rem`,
+  };
+
+  const h1Styles = {
+    fontSize: `${2}rem`,
+    fontWeight: `bolder`,
+    marginBottom: `${1}rem`,
+  };
+
+  const postCredit = {
+    fontSize: `${1}rem`,
+    marginTop: `${1}rem`,
+  };
+
+  const editPost = {
+    marginRight: `${0.5}rem`,
+  };
+
   if (!post)
     return (
       <section>
@@ -17,16 +47,21 @@ const SinglePostPage = () => {
     );
 
   return (
-    <article>
-      <h2>{post.title}</h2>
-      <p>{post.body}</p>
-      <p className="postCredit">
-        <Link to={`/post/edit/${post.id}`}> Edit Post</Link>
-        <PostAuthor userId={post.userId} />
-        <TimeAgo timestamp={post.date} />
-      </p>
-      <ReactionButtons post={post} />
-    </article>
+    <div style={divStyles}>
+      <article style={articleStyles}>
+        <h1 style={h1Styles}>{post.title}</h1>
+        <p>{post.body}</p>
+        <p style={postCredit}>
+          <Link style={editPost} to={`/post/edit/${post.id}`}>
+            {" "}
+            Edit Post
+          </Link>
+          <PostAuthor userId={post.userId} />
+          <TimeAgo timestamp={post.date} />
+        </p>
+        <ReactionButtons post={post} />
+      </article>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectPostById, updatePost } from "./postsSlice";
+import { deletePost, selectPostById, updatePost } from "./postsSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { selectAllUsers } from "../users/usersSlice";
 
@@ -46,9 +46,7 @@ const EditPostForm = () => {
           })
         ).unwrap();
 
-        setTitle("");
-        setContent("");
-        setUserId("");
+        resetStates();
         navigate(`/post/${postId}`);
       } catch (err) {
         console.error("Failed to save the post", err);
@@ -56,6 +54,25 @@ const EditPostForm = () => {
         setRequestStatus("idle");
       }
     }
+  };
+
+  const onDeletePostClicked = () => {
+    try {
+      setRequestStatus("pending");
+      dispatch(deletePost({ id: post.id })).unwrap();
+      resetStates();
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to delete the post", error);
+    } finally {
+      setRequestStatus("idle");
+    }
+  };
+
+  const resetStates = () => {
+    setTitle("");
+    setContent("");
+    setUserId("");
   };
 
   const usersOptions = users.map((user) => (
@@ -94,6 +111,9 @@ const EditPostForm = () => {
         />
         <button type="button" onClick={onSavePostClicked} disabled={!canSave}>
           Save Post
+        </button>
+        <button type="button" onClick={onDeletePostClicked}>
+          Delete Post
         </button>
       </form>
     </section>
