@@ -53,6 +53,11 @@ const Header = () => {
               Post
             </Link>
           </li>
+          <li style={listStyles}>
+            <Link style={linkItem} to="user">
+              Users
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>

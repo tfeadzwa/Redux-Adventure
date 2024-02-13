@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deletePost, selectPostById, updatePost } from "./postsSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { selectAllUsers } from "../users/usersSlice";
+import "../../assets/editpost.scss";
 
 const EditPostForm = () => {
   const { postId } = useParams();
@@ -11,9 +12,9 @@ const EditPostForm = () => {
   const post = useSelector((state) => selectPostById(state, Number(postId)));
   const users = useSelector(selectAllUsers);
 
-  const [title, setTitle] = useState(post?.title);
-  const [content, setContent] = useState(post?.body);
-  const [userId, setUserId] = useState(post?.userId);
+  const [title, setTitle] = useState(post?.title || "");
+  const [content, setContent] = useState(post?.body || "");
+  const [userId, setUserId] = useState(post?.userId || "");
   const [requestStatus, setRequestStatus] = useState("idle");
 
   const dispatch = useDispatch();
@@ -82,9 +83,9 @@ const EditPostForm = () => {
   ));
 
   return (
-    <section>
-      <h2>Edit Post</h2>
-      <form>
+    <section className="editpost">
+      <h2 className="editpost__header">Edit Post</h2>
+      <form className="editpost__form">
         <label htmlFor="postTitle">Post Title:</label>
         <input
           type="text"
@@ -95,6 +96,7 @@ const EditPostForm = () => {
         />
         <label htmlFor="postAuthor">Author:</label>
         <select
+          className="editpost__select"
           id="postAuthor"
           defaultValue={userId}
           onChange={onAuthorChanged}
@@ -104,15 +106,25 @@ const EditPostForm = () => {
         </select>
         <label htmlFor="postContent">Content:</label>
         <textarea
+          className="editpost__textarea"
           id="postContent"
           name="postContent"
           value={content}
           onChange={onContentChanged}
         />
-        <button type="button" onClick={onSavePostClicked} disabled={!canSave}>
+        <button
+          className="editpost__savepostbtn"
+          type="button"
+          onClick={onSavePostClicked}
+          disabled={!canSave}
+        >
           Save Post
         </button>
-        <button type="button" onClick={onDeletePostClicked}>
+        <button
+          className="editpost__deletepostbtn"
+          type="button"
+          onClick={onDeletePostClicked}
+        >
           Delete Post
         </button>
       </form>
