@@ -1,0 +1,54 @@
+.editpost {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8rem;
+  margin-inline: 4rem;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    min-width: 40rem;
+  }
+
+  &__header {
+    margin-bottom: 1rem;
+  }
+
+  label {
+    font-size: 1.125rem;
+  }
+
+  select > option,
+  input,
+  select,
+  button,
+  textarea {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  select {
+    cursor: pointer;
+  }
+
+  &__textarea {
+    min-height: 10rem;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background-color: rgb(209, 211, 213);
+    cursor: not-allowed;
+  }
+
+  &__deletepostbtn {
+    color: white;
+    background-color: red;
+  }
+}
