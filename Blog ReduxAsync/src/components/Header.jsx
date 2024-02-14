@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { increaseCount, getCount } from "../features/posts/postsSlice";
 
 const headerStyles = {
   position: "fixed",
@@ -36,6 +38,9 @@ const linkItem = {
 };
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const count = useSelector(getCount);
+
   return (
     <header style={headerStyles}>
       <nav style={navStyles}>
@@ -58,6 +63,13 @@ const Header = () => {
               Users
             </Link>
           </li>
+          <button
+            style={{ padding: `${0.5}rem`, cursor: "pointer" }}
+            type="button"
+            onClick={() => dispatch(increaseCount())}
+          >
+            {count}
+          </button>
         </ul>
       </nav>
     </header>
