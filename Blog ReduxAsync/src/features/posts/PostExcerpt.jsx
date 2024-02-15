@@ -3,8 +3,12 @@ import PostAuthor from "./PostAuthor";
 import TimeAgo from "./TimeAgo";
 import ReactionButtons from "./ReactionButtons";
 import { Link } from "react-router-dom";
+import { selectPostById } from "./postsSlice";
+import { useSelector } from "react-redux";
 
-const PostExcerpt = ({ post }) => {
+const PostExcerpt = ({ postId }) => {
+  const post = useSelector((state) => selectPostById(state, postId));
+
   return (
     <article>
       <h1>{post.title}</h1>
@@ -30,5 +34,5 @@ const PostExcerpt = ({ post }) => {
 export default PostExcerpt;
 
 PostExcerpt.propTypes = {
-  post: PropTypes.any,
+  postId: PropTypes.any,
 };

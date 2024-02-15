@@ -1,10 +1,10 @@
 import "../../assets/postslist.scss";
 import { useSelector } from "react-redux";
-import { selectAllPosts, getPostsStatus, getPostsError } from "./postsSlice";
+import { getPostsStatus, getPostsError, selectPostIds } from "./postsSlice";
 import PostExcerpt from "./PostExcerpt";
 
 const PostsList = () => {
-  const posts = useSelector(selectAllPosts);
+  const orderedPosts = useSelector(selectPostIds);
   const postsStatus = useSelector(getPostsStatus);
   const postsError = useSelector(getPostsError);
 
@@ -13,11 +13,9 @@ const PostsList = () => {
     content = <p>Loading....</p>;
   } else if (postsStatus === "succeeded") {
     // sort posts by date posted
-    const orderedPosts = posts
-      .slice()
-      .sort((a, b) => b.date.localeCompare(a.date));
-    content = orderedPosts.map((post) => (
-      <PostExcerpt key={post.date} post={post} />
+
+    content = orderedPosts.map((postId) => (
+      <PostExcerpt key={postId} postId={postId} />
     ));
   } else if (postsStatus === "failed") {
     content = <p>{postsError}</p>;
