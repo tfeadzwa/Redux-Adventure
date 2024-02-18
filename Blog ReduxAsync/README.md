@@ -47,7 +47,7 @@ export const selectPostByUser = createSelector(
 
 Normalized state structure is a recommended approach for storing items in redux. Normalization in redux means:
 
-- No duplication of data
+- There should be no duplication of data
 - Creates an ID Lookup table
 - E.g., a normalized state shape may be comprized of an object with an `ids` array and nested entities object that contains all of the items as shown below:
 
